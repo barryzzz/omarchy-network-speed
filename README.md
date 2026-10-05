@@ -14,9 +14,10 @@ The bar shows a single speed value that alternates between ↓ download and
 ↑ upload every couple of seconds. Click it to open the details panel (which
 shows both directions); press Escape to close.
 
-The widget reports the **active route interface** (`ip route get 1.1.1.1`), so
-when a VPN or proxy tunnel (e.g. mihomo/clash) is active, it shows the tunnel's
-traffic rather than the physical NIC's.
+The widget reports the **physical NIC(s)**, not a proxy tunnel: it sums every
+hardware-backed interface (`/sys/class/net/<iface>/device`) that is up, so with
+mihomo/clash active it still shows real NIC (e.g. `wlp6s0`) traffic rather than
+the `mihomo` TUN device.
 
 ## Requirements
 

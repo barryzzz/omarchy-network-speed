@@ -80,9 +80,11 @@ Manifest rules (enforced by `omarchy plugin validate`, mirroring the shell's
   the widget root) and popout switching work. `injectPanel()` copies `bar`,
   `anchorItem`, `hostWidget` into the panel after it loads.
 - `netstats.sh` — helper invoked once per second. Prints
-  `<iface>\t<rx_bytes>\t<tx_bytes>` for the interface returned by
-  `ip route get 1.1.1.1` (the active route interface), read from
-  `/sys/class/net/<iface>/statistics/`. Deliberately avoids `ping`/`jq` so
+  `<iface>\t<rx_bytes>\t<tx_bytes>` for the active *physical* NIC(s): it sums
+  every interface with a `/sys/class/net/<iface>/device` symlink (PCI/USB
+  hardware) whose `operstate` is `up`, skipping virtual devices (`lo`,
+  `tun`/`tap`, `veth`, docker, bridges, and tunnels like mihomo). Counters read
+  from `/sys/class/net/<iface>/statistics/`. Deliberately avoids `ping`/`jq` so
   polling stays cheap. Resolved relative to the QML via
   `Qt.resolvedUrl("netstats.sh")`, so it works both in-place and git-installed.
 - `Model.js` — pure JS (node-testable): `parseSample`, `throughputState`
@@ -95,9 +97,10 @@ Manifest rules (enforced by `omarchy plugin validate`, mirroring the shell's
 - Both QML files must use the same `moduleName`; the nested panel does not get
   its own `kinds` entry.
 
-Note on interface selection: this widget reports the *active route* interface
-(`ip route get 1.1.1.1`), matching `omarchy-network-status`. With a VPN/proxy
-(e.g. mihomo/clash) the reported interface is the tunnel, not the physical NIC.
+Note on interface selection: this widget reports *physical* NIC traffic, not the
+active-route interface — `ip route get 1.1.1.1` is fooled by proxy TUNs (mihomo/
+clash fake-ip routes traffic through a `mihomo` device). netstats.sh picks
+hardware-backed interfaces directly instead (see the netstats.sh bullet above).
 
 ## Key APIs
 
