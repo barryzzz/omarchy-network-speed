@@ -63,15 +63,17 @@ function formatRate(bytesPerSec) {
   return formatBytes(bytesPerSec) + "/s"
 }
 
-// Compact rate for the bar: "0B", "300K", "1.2M", "3.5G". Keeps one decimal
-// only below ten of the unit so the label stays narrow.
+// Compact rate for the bar: "0B/s", "300K/s", "1.2M/s", "3.5G/s". Keeps one
+// decimal only below ten of the unit so the label stays narrow.
 function formatRateCompact(bytesPerSec) {
   var n = Number(bytesPerSec)
   if (!isFinite(n) || n < 0) n = 0
-  if (n < 1024) return Math.round(n) + "B"
-  if (n < 1024 * 1024) return (n / 1024).toFixed(n < 10 * 1024 ? 1 : 0) + "K"
-  if (n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(n < 10 * 1024 * 1024 ? 1 : 0) + "M"
-  return (n / (1024 * 1024 * 1024)).toFixed(2) + "G"
+  var value
+  if (n < 1024) value = Math.round(n) + "B"
+  else if (n < 1024 * 1024) value = (n / 1024).toFixed(n < 10 * 1024 ? 1 : 0) + "K"
+  else if (n < 1024 * 1024 * 1024) value = (n / (1024 * 1024)).toFixed(n < 10 * 1024 * 1024 ? 1 : 0) + "M"
+  else value = (n / (1024 * 1024 * 1024)).toFixed(2) + "G"
+  return value + "/s"
 }
 
 if (typeof module !== "undefined") {
