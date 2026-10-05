@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.barryzzz.network-speed",
+  "name": "Network Speed",
+  "version": "0.1.0",
+  "author": "barryzzz",
+  "license": "MIT",
+  "description": "Live network upload/download speed for the Omarchy bar.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Network Speed",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
