@@ -17,6 +17,14 @@ Panel {
 
   readonly property var host: hostWidget || null
 
+  // Text has to come from the popup's own palette, not `barForeground`. With a
+  // transparent bar, `barForeground` is contrast-adapted against the wallpaper
+  // that sits *behind the bar* (omarchy-bar-text-color can return the dark
+  // background color) and is invisible on this card's own popup background.
+  // `Color.popups.text` is the role that pairs with Color.popups.background,
+  // which is what KeyboardPanel paints the card with.
+  readonly property color contentForeground: Color.popups.text
+
   function switchPanel(direction) {
     if (root.bar && typeof root.bar.switchPanelFrom === "function")
       return root.bar.switchPanelFrom(root.hostWidget || root, direction)
@@ -47,7 +55,7 @@ Panel {
         Text {
           width: parent.width
           text: root.host && root.host.iface ? root.host.iface : "Network"
-          color: root.barForeground
+          color: root.contentForeground
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.subtitle
           font.bold: true
@@ -57,7 +65,7 @@ Panel {
         Text {
           width: parent.width
           text: "↓ " + (root.host ? Model.formatRate(root.host.downloadRate) : "--")
-          color: root.barForeground
+          color: root.contentForeground
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.body
         }
@@ -65,7 +73,7 @@ Panel {
         Text {
           width: parent.width
           text: "↑ " + (root.host ? Model.formatRate(root.host.uploadRate) : "--")
-          color: root.barForeground
+          color: root.contentForeground
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.body
         }
@@ -74,7 +82,7 @@ Panel {
           width: parent.width
           text: (root.host ? "↓ " + Model.formatBytes(root.host.totalRxBytes) + " total" : "")
             + (root.host ? "   ↑ " + Model.formatBytes(root.host.totalTxBytes) + " total" : "")
-          color: root.barForeground
+          color: root.contentForeground
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
           font.pixelSize: Style.font.caption
           opacity: 0.7

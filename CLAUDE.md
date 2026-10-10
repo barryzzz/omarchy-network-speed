@@ -94,6 +94,16 @@ Manifest rules (enforced by `omarchy plugin validate`, mirroring the shell's
   `KeyboardPanel` anchors the surface to the bar button; `PanelKeyCatcher`
   closes on Escape and forwards Tab to `switchPanel()`. Reads live values off
   `hostWidget` (the BarWidget).
+
+  **Popup text must use `Color.popups.text`, never `root.barForeground`.**
+  `barForeground` is contrast-adapted against whatever sits *behind the bar*
+  (`omarchy-bar-text-color`, active when shell.json has `bar.transparent`),
+  so on a bright wallpaper it resolves to the dark background color — and this
+  card is painted with that same dark `Color.popups.background`, giving ~1:1
+  contrast and invisible text. `Color.popups.text` is the role that pairs with
+  `Color.popups.background`; it is exposed as `contentForeground`. First-party
+  panels (clock, audio, power, network) use `bar.foreground` for popup body
+  text for the same reason.
 - Both QML files must use the same `moduleName`; the nested panel does not get
   its own `kinds` entry.
 
